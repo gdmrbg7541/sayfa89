@@ -255,24 +255,25 @@
         
             /* 1. Başlığı ve Ses Tuşunu Küçült */
             #instruction-text {
-                font-size: 1.4rem; /* Başlık küçültüldü */
+                font-size: 1.4rem; 
                 margin-bottom: 10px;
             }
 
+            /* GÜNCELLENDİ: Ses tuşu küçültüldü */
             #play-sound-btn {
-                font-size: 3.5rem; /* Ses tuşu simgesi küçültüldü */
-                /* Tuşun kendisi küçültüldü (clamp değerleri) */
-                width: clamp(80px, 15vh, 110px); 
-                height: clamp(80px, 15vh, 110px);
+                font-size: 3rem; /* Simge boyutu (5rem'den) */
+                /* Tuşun kendisi (clamp değerleri küçültüldü) */
+                width: clamp(70px, 12vh, 100px); 
+                height: clamp(70px, 12vh, 100px);
             }
 
-            /* 2. Tüm Görsel Şıklarını (Normal ve Panoramik) 3 Satır Yap */
+            /* 2. GÜNCELLENDİ: TÜM Görsel Şıklarını 3 Satır Yap */
             #options-container.layout-panoramic,
-            #options-container.layout-audio-normal {
-                grid-template-columns: 1fr;
-                grid-template-rows: 1fr 1fr 1fr;
+            #options-container.layout-audio-normal { /* 'diğer görseller' eklendi */
+                grid-template-columns: 1fr; /* 1 sütun */
+                grid-template-rows: 1fr 1fr 1fr; /* 3 satır */
                 gap: 10px;
-                padding: 10px 20px; /* Daha az kenar boşluğu */
+                padding: 10px 20px; 
             }
 
             /* Panoramik (2+1) düzenin özel kurallarını mobilde sıfırla */
@@ -288,12 +289,12 @@
                  width: 100%;
             }
             
-            /* Panoramik resimlerin yüksekliğini mobilde daha da küçült */
+            /* Panoramik resimlerin yüksekliğini mobilde küçült */
             #options-container.layout-panoramic .option-btn.image-option img {
-                 height: clamp(80px, 15vh, 150px); /* 300px tavanı çok büyüktü */
+                 height: clamp(80px, 15vh, 150px); 
             }
             #options-container.layout-panoramic .option-btn:nth-child(3) img {
-                 width: 100%; /* Ortalamayı bırak, tam kaplasın */
+                 width: 100%; 
                  height: clamp(80px, 15vh, 150px);
             }
 
