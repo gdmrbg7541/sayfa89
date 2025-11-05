@@ -248,6 +248,64 @@
         }
         #feedback-overlay.correct { background-color: rgba(40, 167, 69, 0.85); }
         #feedback-overlay.wrong { background-color: rgba(220, 53, 69, 0.85); }
+
+        /* ========== MOBİL UYUMLULUK KODU BAŞLANGIÇ ========== */
+
+        @media (max-width: 768px) {
+        
+            /* 1. Başlığı ve Ses Tuşunu Küçült */
+            #instruction-text {
+                font-size: 1.4rem; /* Başlık küçültüldü */
+                margin-bottom: 10px;
+            }
+
+            #play-sound-btn {
+                font-size: 3.5rem; /* Ses tuşu simgesi küçültüldü */
+                /* Tuşun kendisi küçültüldü (clamp değerleri) */
+                width: clamp(80px, 15vh, 110px); 
+                height: clamp(80px, 15vh, 110px);
+            }
+
+            /* 2. Tüm Görsel Şıklarını (Normal ve Panoramik) 3 Satır Yap */
+            #options-container.layout-panoramic,
+            #options-container.layout-audio-normal {
+                grid-template-columns: 1fr;
+                grid-template-rows: 1fr 1fr 1fr;
+                gap: 10px;
+                padding: 10px 20px; /* Daha az kenar boşluğu */
+            }
+
+            /* Panoramik (2+1) düzenin özel kurallarını mobilde sıfırla */
+            #options-container.layout-panoramic .option-btn:nth-child(1),
+            #options-container.layout-panoramic .option-btn:nth-child(2),
+            #options-container.layout-panoramic .option-btn:nth-child(3) {
+                grid-row: auto;
+                grid-column: auto;
+            }
+
+            /* Panoramik 3. resmin genişlik kuralını sıfırla */
+            #options-container.layout-panoramic .option-btn:nth-child(3) img {
+                 width: 100%;
+            }
+            
+            /* Panoramik resimlerin yüksekliğini mobilde daha da küçült */
+            #options-container.layout-panoramic .option-btn.image-option img {
+                 height: clamp(80px, 15vh, 150px); /* 300px tavanı çok büyüktü */
+            }
+            #options-container.layout-panoramic .option-btn:nth-child(3) img {
+                 width: 100%; /* Ortalamayı bırak, tam kaplasın */
+                 height: clamp(80px, 15vh, 150px);
+            }
+
+            /* 3. Cümle yazı tiplerini mobil için küçült */
+            .option-btn.text-option {
+                /* Masaüstündeki dev (7rem) yerine daha küçüğü */
+                font-size: clamp(1.4rem, 4vh, 2rem); 
+            }
+        
+        }
+        /* ========== MOBİL UYUMLULUK KODU BİTİŞ ========== */
+
     </style>
     </head>
 <body>
