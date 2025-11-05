@@ -4,27 +4,568 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Arapça Etkileşimli Alıştırma</title>
-    <link rel="stylesheet" href="style.css">
-</head>
+    <!-- YENİ: Google Font Eklendi -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;700&display=swap" rel="stylesheet">
+    <!-- YENİ: Bitiş -->
+
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f0f2f5;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            direction: rtl;
+        }
+
+        .hidden { display: none !important; }
+
+        #start-screen {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+        }
+
+        #start-button {
+            font-size: 3rem;
+            padding: 2rem 4rem;
+            cursor: pointer;
+            border: none;
+            border-radius: 12px;
+            background-color: #007bff;
+            color: white;
+        }
+
+        #game-container {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+        }
+        
+        #question-area {
+            display: flex; /* Grid'den Flex'e değiştirildi */
+            flex-direction: column; /* Öğeleri dikeyde sırala (Yönerge + İçerik) */
+            justify-content: center; /* Varsayılan: Dikeyde ortala (Ses simgesi için) */
+            align-items: center; /* Yatayda ortala */
+            padding: 10px; /* Padding ayarı */
+            box-sizing: border-box;
+        }
+        #options-container {
+            display: grid;
+            gap: 15px;
+            padding: 20px;
+            box-sizing: border-box;
+            background-color: #ffffff;
+            border-top: 2px solid #e0e0e0; /* Varsayılan mavi çizgi */
+        }
+
+        #instruction-text {
+            font-family: "Noto Naskh Arabic", sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 15px; /* Yönerge ile içerik arasını aç */
+            text-align: center;
+        }
+        
+        /* --- YENİ DİKEY BÖLÜNME KURALLARI --- */
+        
+        /* TASARIM 1 (Panoramik): Ses %25, Şıklar %75 */
+        #game-container.type-panoramic #question-area { flex: 0.25; }
+        #game-container.type-panoramic #options-container {
+            flex: 0.75;
+            border-top: none; /* İsteğiniz: Mavi çizgiyi kaldır */
+        }
+        
+        /* TASARIM 2 (Normal Ses): Ses %40, Şıklar %60 */
+        #game-container.type-audio-normal #question-area { flex: 0.4; }
+        #game-container.type-audio-normal #options-container { flex: 0.6; }
+        
+        /* GÜNCELLENDİ: TASARIM 3 (Cümle): Görsel %50, Şıklar %50 (Tam ikiye böl) */
+        #game-container.type-image-sentence #question-area { flex: 1.4; min-height: 0; }
+        #game-container.type-image-sentence #options-container { flex: 0.6; }
+
+
+        #question-image {
+            max-width: 80%;
+            max-height: 80%;
+            object-fit: contain; 
+            border-radius: 15px;
+        }
+
+     #play-sound-btn {
+            /* font-size: 5rem; SİLİNDİ */
+            display: grid; /* YENİ: İçeriği ortalamak için */
+            place-items: center; /* YENİ: İçeriği ortalamak için */
+            width: clamp(100px, 20vh, 150px); 
+            height: clamp(100px, 20vh, 150px);
+            border-radius: 50%;
+            border: none;
+            background-color: #28a745;
+            color: white;
+            cursor: pointer;
+        }
+
+
+        /* --- YENİ ŞIK YERLEŞİM KURALLARI --- */
+
+        /* GÜNCELLENDİ: TASARIM 1 (Panoramik): 2+1 Izgara, boşluk arttı */
+        #options-container.layout-panoramic {
+            grid-template-rows: 1fr 1fr;    
+            grid-template-columns: 1fr 1fr; 
+            padding: 20px 40px; /* Kenar boşluğu arttı */
+            gap: 20px; /* İsteğiniz: Aradaki boşluk arttı */
+        }
+        #options-container.layout-panoramic .option-btn:nth-child(1) {
+            grid-row: 1; grid-column: 1;
+        }
+        #options-container.layout-panoramic .option-btn:nth-child(2) {
+            grid-row: 1; grid-column: 2;
+        }
+        #options-container.layout-panoramic .option-btn:nth-child(3) {
+            grid-row: 2; 
+            grid-column: 1 / span 2; 
+        }
+        #options-container.layout-panoramic .option-btn:nth-child(3) img {
+             width: 50%; 
+             height: auto;
+             max-height: 100%;
+        }
+
+        
+        /* TASARIM 2 (Normal Ses): 3 Sütun */
+        #options-container.layout-audio-normal {
+            grid-template-columns: 1fr 1fr 1fr; 
+            grid-template-rows: 1fr;
+        }
+
+        /* YENİ KURAL: Sadece normal ses şıklarının yüksekliği 100% olsun */
+        #options-container.layout-audio-normal .option-btn {
+            height: 100%;
+        }
+        
+        /* TASARIM 3 (Cümle): 3 Satır */
+        #options-container.layout-image-sentence {
+            grid-template-columns: 1fr;
+            grid-template-rows: auto auto auto; 
+            align-content: center; 
+            padding: 10px 40px;
+            gap: 10px; 
+        }
+
+        /* GÜNCELLENDİ: Çerçeve kalınlaştı */
+        .option-btn {
+            width: 100%;
+            cursor: pointer;
+            border: 4px solid #ced4da; /* İsteğiniz: Çerçeve (3px->4px) */
+            border-radius: 12px;
+            background-color: #f8f9fa;
+            transition: all 0.2s ease;
+            padding: 5px; 
+            box-sizing: border-box;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        .option-btn:hover {
+            transform: scale(1.03);
+            border-color: #007bff;
+        }
+
+        .option-btn.image-option img {
+            width: 100%;
+            height: auto;
+            object-fit: contain; 
+            border-radius: 8px;
+            /* Resmin kendisine de ince bir çerçeve ekleyelim */
+            border: 1px solid #eee;
+        }
+        
+        /* GÜNCELLENDİ: clamp() ile küçültüldü */
+        #options-container.layout-panoramic .option-btn.image-option img {
+             width: 100%; 
+             object-fit: contain;
+             border: none; /* Panoramiklerde iç çerçeve olmasın */
+             /* İsteğiniz: Küçültüldü (Min 100px, Tercih edilen 40vh, Max 300px) */
+             height: clamp(100px, 40vh, 300px);
+        }
+        
+        /* Ortadaki 3. resim için özel küçültme (2+1 düzende) */
+        #options-container.layout-panoramic .option-btn:nth-child(3) img {
+             width: 100%; /* Düğmenin yarısı kaplasın (ortalı) */
+             height: clamp(100px, 40vh, 300px);
+        }
+
+
+        .option-btn.text-option {
+            font-family: "Noto Naskh Arabic", sans-serif; /* YENİ: Naskh yazı tipi */
+            font-weight: 700; /* YENİ: Yazıyı kalın ve okunaklı yap */
+            font-size: clamp(3rem, 5vh, 7rem);
+            text-align: center;
+            direction: rtl; 
+            line-height: 1.4;
+            height: auto; /* DÜZELTME: 'auto' olmalı ki kutu ortalansın */
+            padding: 10px;
+        }
+
+        #progress-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 8px;
+            background-color: #007bff;
+            width: 0%; 
+            transition: width 0.3s ease;
+        }
+
+        #feedback-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 8rem;
+            color: white;
+            font-weight: bold;
+            z-index: 100;
+        }
+        #feedback-overlay.correct { background-color: rgba(40, 167, 69, 0.85); }
+        #feedback-overlay.wrong { background-color: rgba(220, 53, 69, 0.85); }
+    </style>
+    </head>
 <body>
 
     <div id="start-screen">
-        <button id="start-button">BAŞLA</button>
+        <button id="start-button">اِبْدَأْ</button>
     </div>
 
     <div id="game-container" class="hidden">
-        
-        <div id="question-area">
-            </div>
-
-        <div id="options-container">
-            </div>
-
+        <div id="question-area"></div>
+        <div id="options-container"></div>
         <div id="progress-indicator"></div>
     </div>
 
     <div id="feedback-overlay" class="hidden"></div>
 
-    <script src="script.js"></script>
-</body>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const startScreen = document.getElementById('start-screen');
+            const startButton = document.getElementById('start-button');
+            const gameContainer = document.getElementById('game-container'); 
+            const questionArea = document.getElementById('question-area');
+            const optionsContainer = document.getElementById('options-container');
+            const progressIndicator = document.getElementById('progress-indicator');
+            const feedbackOverlay = document.getElementById('feedback-overlay');
+
+            let audioContext;
+            let allQuestions = [];
+            let currentQuestionIndex = 0;
+            let isChecking = false; 
+
+            // --- VERİ HAZIRLAMA ---
+            const allSentences = [
+                "أُفَضِّلُ السِّباحَة عَلى كُرَة القَدَم.", // 0
+                "يُفَضِّلُ السِّباحَة.", // 1
+                "هِوايَتي الاِسْتِماع إِلى الموسيقى.", // 2
+                "أُفَضِّلُ قِرَاءَةَ الْكُتُب عَلَى الرِّمَايَة.", // 3
+                "أُفَضِّلُ الرَّسْم عَلَى المَسْرَح.", // 4
+                "أُفَضِّلُ كُرَة السَّلَّة.", // 5
+                "أُفَضِّلُ كُرَة القَدَم.", // 6
+                "تُمارِس الرَّسْم في الحَديقَة.", // 7
+                "يَقْرَأُ الكِتاب في البَيْت.", // 8
+                "تُمارِسُ الرَّسْم في البَيْت.", // 9 (Ekstra)
+                "الرِّمايَة", // 10 (Ekstra)
+                "يَقْرَأُ الكِتاب في الحَديقَة.", // 11 (Ekstra)
+                "تُمارِس الرَّسْم في البَيْت.", // 12 (Ekstra)
+                "الاِسْتِماع إِلى الموسيقى" // 13 (Ekstra)
+            ];
+
+            const allImages = [];
+            for (let i = 1; i <= 14; i++) { allImages.push(`${i}.jpeg`); }
+
+            const allSounds = [];
+            for (let i = 1; i <= 9; i++) { allSounds.push(`${i}.mp3`); }
+
+            const specialLandscapeImages = ['1.jpeg', '4.jpeg', '5.jpeg'];
+            const specialIndices = [0, 3, 4]; 
+
+            // --- SES ÜRETİMİ (SİNÜS DALGASI) ---
+            function createTone(frequency, type = 'sine', duration = 0.2) {
+                if (!audioContext) return;
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                oscillator.type = type;
+                oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
+                gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + duration);
+                oscillator.start();
+                oscillator.stop(audioContext.currentTime + duration);
+            }
+            function playCorrectSound() {
+                createTone(660, 'sine', 0.15);
+                setTimeout(() => createTone(880, 'sine', 0.2), 100);
+            }
+            function playWrongSound() { createTone(220, 'sawtooth', 0.4); }
+            function playClickSound() { createTone(440, 'triangle', 0.1); }
+
+
+            // --- OYUN MANTIĞI ---
+
+            function startGame() {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                startScreen.classList.add('hidden');
+                gameContainer.classList.remove('hidden');
+                buildAndGroupQuestions();
+                currentQuestionIndex = 0;
+                loadQuestion(allQuestions[currentQuestionIndex]);
+            }
+
+            // Soru Oluşturucu (Tasarım adları CSS ile eşleşiyor)
+            function buildAndGroupQuestions() {
+                let audioQuestions = [];
+                let imageQuestions = [];
+                
+                // TASARIM 1 (Panoramik)
+                audioQuestions.push({
+                    type: 'audio_to_image',
+                    sound: '1.mp3',
+                    correctAnswer: '1.jpeg',
+                    layout: 'layout-panoramic', 
+                    specificOptions: specialLandscapeImages 
+                });
+                audioQuestions.push({
+                    type: 'audio_to_image',
+                    sound: '4.mp3',
+                    correctAnswer: '4.jpeg',
+                    layout: 'layout-panoramic', 
+                    specificOptions: specialLandscapeImages
+                });
+                audioQuestions.push({
+                    type: 'audio_to_image',
+                    sound: '5.mp3',
+                    correctAnswer: '5.jpeg',
+                    layout: 'layout-panoramic', 
+                    specificOptions: specialLandscapeImages
+                });
+
+                // TASARIM 2 (Normal Ses)
+                for (let i = 0; i < 9; i++) {
+                    if (specialIndices.includes(i)) continue; 
+                    audioQuestions.push({
+                        type: 'audio_to_image',
+                        sound: allSounds[i],       
+                        correctAnswer: allImages[i],
+                        layout: 'layout-audio-normal' 
+                    });
+                }
+
+                // TASARIM 3 (Cümle)
+                for (let i = 0; i < 9; i++) {
+                    if (specialIndices.includes(i)) continue; 
+                    imageQuestions.push({
+                        type: 'image_to_text',
+                        image: allImages[i],         
+                        correctAnswer: allSentences[i],
+                        layout: 'layout-image-sentence' 
+                    });
+                }
+                
+                let shuffledAudio = shuffleArray(audioQuestions);
+                let shuffledImage = shuffleArray(imageQuestions);
+
+                allQuestions = [ ...shuffledAudio, ...shuffledImage ];
+            }
+
+
+            function loadQuestion(question) {
+                if (!question) {
+                    showGameEnd();
+                    return;
+                }
+
+                isChecking = false;
+                questionArea.innerHTML = '';
+                optionsContainer.innerHTML = '';
+
+                // Şıkların yerleşim düzenini ayarla
+                optionsContainer.className = 'options-container'; 
+                optionsContainer.classList.add(question.layout); 
+
+                const progressPercent = ((currentQuestionIndex + 1) / allQuestions.length) * 100;
+                progressIndicator.style.width = `${progressPercent}%`;
+
+                // YENİ: Yönerge elementini oluştur
+                const instructionEl = document.createElement('div');
+                instructionEl.id = 'instruction-text';
+                questionArea.appendChild(instructionEl); // Yönergeyi soru alanına ekle
+
+                let options = [];
+                let correctAnswer = question.correctAnswer;
+
+                if (question.type === 'audio_to_image') {
+                    // YENİ: Yönerge metni ve Dikey Ortalama (Ses Simgesi)
+                    instructionEl.textContent = "اِسْتَمِعْ إِلى الصَّوْت وَاخْتَر الصّورَة";
+                    questionArea.style.justifyContent = 'center';
+
+                    // Dikey bölünme sınıfını ayarla
+                    if (question.layout === 'layout-panoramic') {
+                        gameContainer.className = 'type-panoramic'; // 25/75
+                    } else {
+                        gameContainer.className = 'type-audio-normal'; // 40/60
+                    }
+                    
+                    const playButton = document.createElement('button');
+                    playButton.id = 'play-sound-btn';
+                    playButton.innerHTML = '<svg viewBox="0 0 24 24" style="width: 55%; height: 55%;"><path fill="white" d="M8 5v14l11-7z"/></svg>';
+                    const audio = new Audio(question.sound);
+                    playButton.onclick = () => audio.play();
+                    questionArea.appendChild(playButton); // Düğmeyi yönergeden SONRA ekle
+                    
+
+                    if (question.specificOptions) {
+                        options = shuffleArray(question.specificOptions);
+                    } else {
+                        let distractors = getDistractors(allImages, correctAnswer, 2, true);
+                        options = shuffleArray([correctAnswer, ...distractors]);
+                    }
+                    
+                    options.forEach(optionValue => {
+                        const optionButton = createOptionButton(optionValue, 'image');
+                        optionsContainer.appendChild(optionButton);
+                    });
+
+                } else if (question.type === 'image_to_text') {
+                    // YENİ: Yönerge metni ve Üste Hizalama (Görsel)
+                    instructionEl.textContent = "اُنْظُرْ إِلى الصّورَة وَاخْتَر الجُمْلَة";
+                    questionArea.style.justifyContent = 'flex-start'; // Görseli ve yönergeyi üste al
+
+                    // Dikey bölünme sınıfını ayarla
+                    gameContainer.className = 'type-image-sentence'; 
+                    
+                    const img = document.createElement('img');
+                    img.id = 'question-image';
+                    img.src = question.image;
+                    questionArea.appendChild(img); // Resmi yönergeden SONRA ekle
+
+                    let distractors = getDistractors(allSentences, correctAnswer, 2, true);
+                    options = shuffleArray([correctAnswer, ...distractors]);
+                    
+                    options.forEach(optionValue => {
+                        const optionButton = createOptionButton(optionValue, 'text');
+                        optionsContainer.appendChild(optionButton);
+                    });
+                }
+            }
+
+            function createOptionButton(value, type) {
+                const button = document.createElement('button');
+                button.classList.add('option-btn');
+
+                if (type === 'image') {
+                    button.classList.add('image-option');
+                    const img = document.createElement('img');
+                    img.src = value;
+                    button.appendChild(img);
+                } else if (type === 'text') {
+                    button.classList.add('text-option');
+                    button.textContent = value;
+                }
+
+                button.addEventListener('click', () => {
+                    if (isChecking) return;
+                    isChecking = true;
+                    playClickSound();
+                    checkAnswer(value, allQuestions[currentQuestionIndex].correctAnswer);
+                });
+
+                return button;
+            }
+
+            function checkAnswer(selectedValue, correctAnswer) {
+                if (selectedValue === correctAnswer) {
+                    playCorrectSound();
+                    showFeedback('correct');
+                } else {
+                    playWrongSound();
+                    showFeedback('wrong');
+                }
+
+                setTimeout(() => {
+                    feedbackOverlay.classList.add('hidden');
+                    currentQuestionIndex++;
+                    if (currentQuestionIndex < allQuestions.length) {
+                        loadQuestion(allQuestions[currentQuestionIndex]);
+                    } else {
+                        showGameEnd();
+                    }
+                }, 1500);
+            }
+
+            function showFeedback(type) {
+                feedbackOverlay.className = '';
+                feedbackOverlay.classList.add(type);
+                feedbackOverlay.textContent = (type === 'correct') ? '✓' : '✗';
+            }
+
+            function showGameEnd() {
+                gameContainer.innerHTML = ''; 
+                const endMessage = document.createElement('h1');
+                endMessage.textContent = 'Harika! Etkileşimi tamamladın.';
+                endMessage.style.color = '#333';
+                endMessage.style.fontSize = '3rem';
+                endMessage.style.textAlign = 'center';
+                gameContainer.appendChild(endMessage);
+                gameContainer.style.display = 'flex';
+                gameContainer.style.justifyContent = 'center';
+                gameContainer.style.alignItems = 'center';
+                progressIndicator.style.width = '0%';
+            }
+
+            // --- YARDIMCI FONKSİYONLAR ---
+
+            function shuffleArray(array) {
+                let newArray = [...array]; 
+                for (let i = newArray.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+                }
+                return newArray;
+            }
+
+            function getDistractors(sourceArray, excludeItem, count, excludeSpecials = false) {
+                let pool = sourceArray.filter(item => item !== excludeItem);
+                if (excludeSpecials) {
+                    pool = pool.filter(item => !specialLandscapeImages.includes(item));
+                }
+                const shuffledPool = shuffleArray(pool);
+                const uniqueDistractors = [...new Set(shuffledPool)];
+                return uniqueDistractors.slice(0, count);
+            }
+
+            startButton.addEventListener('click', startGame);
+
+        });
+    </script>
+    </body>
 </html>
