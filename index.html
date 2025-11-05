@@ -251,62 +251,7 @@
 
         /* ========== MOBİL UYUMLULUK KODU BAŞLANGIÇ ========== */
 
-        @media (max-width: 768px) {
-        
-            /* 1. Başlığı ve Ses Tuşunu Küçült */
-            #instruction-text {
-                font-size: 1.4rem; 
-                margin-bottom: 10px;
-            }
-
-            /* GÜNCELLENDİ: Ses tuşu küçültüldü */
-            #play-sound-btn {
-                font-size: 3rem; /* Simge boyutu (5rem'den) */
-                /* Tuşun kendisi (clamp değerleri küçültüldü) */
-                width: clamp(70px, 12vh, 100px); 
-                height: clamp(70px, 12vh, 100px);
-            }
-
-            /* 2. GÜNCELLENDİ: TÜM Görsel Şıklarını 3 Satır Yap */
-            #options-container.layout-panoramic,
-            #options-container.layout-audio-normal { /* 'diğer görseller' eklendi */
-                grid-template-columns: 1fr; /* 1 sütun */
-                grid-template-rows: 1fr 1fr 1fr; /* 3 satır */
-                gap: 10px;
-                padding: 10px 20px; 
-            }
-
-            /* Panoramik (2+1) düzenin özel kurallarını mobilde sıfırla */
-            #options-container.layout-panoramic .option-btn:nth-child(1),
-            #options-container.layout-panoramic .option-btn:nth-child(2),
-            #options-container.layout-panoramic .option-btn:nth-child(3) {
-                grid-row: auto;
-                grid-column: auto;
-            }
-
-            /* Panoramik 3. resmin genişlik kuralını sıfırla */
-            #options-container.layout-panoramic .option-btn:nth-child(3) img {
-                 width: 100%;
-            }
-            
-            /* Panoramik resimlerin yüksekliğini mobilde küçült */
-            #options-container.layout-panoramic .option-btn.image-option img {
-                 height: clamp(80px, 15vh, 150px); 
-            }
-            #options-container.layout-panoramic .option-btn:nth-child(3) img {
-                 width: 100%; 
-                 height: clamp(80px, 15vh, 150px);
-            }
-
-            /* 3. Cümle yazı tiplerini mobil için küçült */
-            .option-btn.text-option {
-                /* Masaüstündeki dev (7rem) yerine daha küçüğü */
-                font-size: clamp(1.4rem, 4vh, 2rem); 
-            }
-        
-        }
-        /* ========== MOBİL UYUMLULUK KODU BİTİŞ ========== */
-/* ========== MOBİL UYUMLULUK KODU BAŞLANGIÇ ========== */
+        /* ========== GÜNCELLENMİŞ MOBİL UYUMLULUK KODU ========== */
 
         @media (max-width: 768px) {
         
@@ -316,30 +261,33 @@
                 margin-bottom: 10px;
             }
 
-            /* GÜNCELLENDİ: Ses tuşu küçültüldü */
             #play-sound-btn {
-                font-size: 3rem; /* Simge boyutu (5rem'den) */
-                /* Tuşun kendisi (clamp değerleri küçültüldü) */
+                font-size: 3rem; 
                 width: clamp(70px, 12vh, 100px); 
                 height: clamp(70px, 12vh, 100px);
             }
+            
+            /* GÜNCELLENDİ: 3 şıkkın sığması için dikey alanı değiştir */
+            /* Normal ses soruları (Tasarım 2) artık %25/%75 alan kullanacak */
+            #game-container.type-audio-normal #question-area { flex: 0.25; }
+            #game-container.type-audio-normal #options-container { flex: 0.75; }
 
-            /* 2. GÜNCELLENDİ: TÜM Görsel Şıklarını 3 Satır Yap */
+
+            /* 2. TÜM Görsel Şıklarını 3 Satır Yap */
             #options-container.layout-panoramic,
-            #options-container.layout-audio-normal { /* 'diğer görseller' eklendi */
+            #options-container.layout-audio-normal { 
                 grid-template-columns: 1fr; /* 1 sütun */
                 grid-template-rows: 1fr 1fr 1fr; /* 3 satır */
                 gap: 10px;
                 padding: 10px 20px; 
             }
             
-            /* YENİ: Diğer görselleri (Tasarım 2) mobilde küçült */
+            /* GÜNCELLENDİ: "Diğer görselleri" (Tasarım 2) ÇOK KÜÇÜK yap */
             #options-container.layout-audio-normal .option-btn img {
                 height: 100%;
                 width: 100%;
                 object-fit: contain;
-                /* Resimlerin o satırda çok büyük olmasını engelle */
-                max-height: 100px; 
+                max-height: 80px; /* İsteğiniz: Çok küçük olsun (100px'ten 80px'e) */
             }
 
             /* Panoramik (2+1) düzenin özel kurallarını mobilde sıfırla */
@@ -355,13 +303,14 @@
                  width: 100%;
             }
             
-            /* Panoramik resimlerin yüksekliğini mobilde küçült */
+            /* GÜNCELLENDİ: "1,4,5 görsellerini" mobilde küçült */
             #options-container.layout-panoramic .option-btn.image-option img {
-                 height: clamp(80px, 15vh, 150px); 
+                 /* 300px tavanı çok büyüktü */
+                 height: clamp(60px, 12vh, 120px); 
             }
             #options-container.layout-panoramic .option-btn:nth-child(3) img {
                  width: 100%; 
-                 height: clamp(80px, 15vh, 150px);
+                 height: clamp(60px, 12vh, 120px);
             }
 
             /* 3. Cümle yazı tiplerini mobil için küçült */
