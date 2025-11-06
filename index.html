@@ -282,12 +282,12 @@
                 padding: 10px 20px; 
             }
             
-            /* GÜNCELLENDİ: "Diğer görselleri" (Tasarım 2) ÇOK KÜÇÜK yap */
+            
             #options-container.layout-audio-normal .option-btn img {
                 height: 100%;
                 width: 100%;
                 object-fit: contain;
-                
+                max-height: 200px; /* İsteğiniz: Çok küçük olsun (100px'ten 80px'e) */
             }
 
             /* Panoramik (2+1) düzenin özel kurallarını mobilde sıfırla */
@@ -304,13 +304,17 @@
             }
             
             /* GÜNCELLENDİ: "1,4,5 görsellerini" mobilde küçült */
+            /* Panoramik resimlerin yüksekliğini mobilde küçült */
             #options-container.layout-panoramic .option-btn.image-option img {
-                 /* 300px tavanı çok büyüktü */
-                 height: clamp(60px, 12vh, 120px); 
+                 height: clamp(140px, 25vh, 170px); /* 80px->100px, 15vh->20vh olarak değişti */
             }
             #options-container.layout-panoramic .option-btn:nth-child(3) img {
                  width: 100%; 
-                 height: clamp(60px, 12vh, 120px);
+                 height: clamp(140px, 25vh, 170px); /* 80px->100px, 15vh->20vh olarak değişti */
+            }
+            #options-container.layout-panoramic .option-btn:nth-child(3) img {
+                 width: 100%; 
+                 height: clamp(140px, 25vh, 170px);
             }
 
             /* 3. Cümle yazı tiplerini mobil için küçült */
