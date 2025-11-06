@@ -287,7 +287,7 @@
                 height: 100%;
                 width: 100%;
                 object-fit: contain;
-                max-height: 160px; /* İsteğiniz: Çok küçük olsun (100px'ten 80px'e) */
+                max-height: 100px; /* İsteğiniz: Çok küçük olsun (100px'ten 80px'e) */
             }
 
             /* Panoramik (2+1) düzenin özel kurallarını mobilde sıfırla */
@@ -306,15 +306,15 @@
             /* GÜNCELLENDİ: "1,4,5 görsellerini" mobilde küçült */
             /* Panoramik resimlerin yüksekliğini mobilde küçült */
             #options-container.layout-panoramic .option-btn.image-option img {
-                 height: clamp(110px, 20vh, 170px); /* 80px->100px, 15vh->20vh olarak değişti */
+                 height: clamp(100px, 20vh, 150px); /* 80px->100px, 15vh->20vh olarak değişti */
             }
             #options-container.layout-panoramic .option-btn:nth-child(3) img {
                  width: 100%; 
-                 height: clamp(110px, 20vh, 170px); /* 80px->100px, 15vh->20vh olarak değişti */
+                 height: clamp(100px, 20vh, 150px); /* 80px->100px, 15vh->20vh olarak değişti */
             }
             #options-container.layout-panoramic .option-btn:nth-child(3) img {
                  width: 100%; 
-                 height: clamp(110px, 20vh, 170px);
+                 height: clamp(100px, 20vh, 150px);
             }
 
             /* 3. Cümle yazı tiplerini mobil için küçült */
