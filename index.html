@@ -10,7 +10,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;700&display=swap" rel="stylesheet">
     <!-- YENİ: Bitiş -->
 
-    <style>
+
+<style>
         html, body {
             margin: 0;
             padding: 0;
@@ -30,12 +31,22 @@
 
         .hidden { display: none !important; }
 
+        /* GÜNCELLENDİ: MASAÜSTÜ KISITLAMASI (16:9) */
         #start-screen {
             display: flex;
             justify-content: center;
             align-items: center;
             width: 100%;
             height: 100%;
+            
+            /* YENİ: Masaüstünde 16:9 orana zorla */
+            max-width: 95vw; /* Genişliğin %95'ini geçmesin */
+            max-height: 95vh; /* Yüksekliğin %95'ini geçmesin */
+            aspect-ratio: 16 / 9; /* İsteğiniz: Yatay 16, Dikey 9 */
+            border-radius: 16px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+            background-color: #ffffff; 
         }
 
         #start-button {
@@ -48,19 +59,29 @@
             color: white;
         }
 
+        /* GÜNCELLENDİ: MASAÜSTÜ KISITLAMASI (16:9) */
         #game-container {
             display: flex;
             flex-direction: column;
             width: 100%;
             height: 100%;
+            
+            /* YENİ: Masaüstünde 16:9 orana zorla */
+            position: relative; 
+            max-width: 95vw;
+            max-height: 95vh;
+            aspect-ratio: 16 / 9; /* İsteğiniz: Yatay 16, Dikey 9 */
+            border-radius: 16px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+            overflow: hidden; 
         }
         
         #question-area {
-            display: flex; /* Grid'den Flex'e değiştirildi */
-            flex-direction: column; /* Öğeleri dikeyde sırala (Yönerge + İçerik) */
-            justify-content: center; /* Varsayılan: Dikeyde ortala (Ses simgesi için) */
-            align-items: center; /* Yatayda ortala */
-            padding: 10px; /* Padding ayarı */
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center; 
+            padding: 10px; 
             box-sizing: border-box;
         }
         #options-container {
@@ -69,7 +90,7 @@
             padding: 20px;
             box-sizing: border-box;
             background-color: #ffffff;
-            border-top: 2px solid #e0e0e0; /* Varsayılan mavi çizgi */
+            border-top: 2px solid #e0e0e0; 
         }
 
         #instruction-text {
@@ -77,24 +98,21 @@
             font-size: 3rem;
             font-weight: 700;
             color: #333;
-            margin-bottom: 15px; /* Yönerge ile içerik arasını aç */
+            margin-bottom: 15px; 
             text-align: center;
         }
         
         /* --- YENİ DİKEY BÖLÜNME KURALLARI --- */
         
-        /* TASARIM 1 (Panoramik): Ses %25, Şıklar %75 */
         #game-container.type-panoramic #question-area { flex: 0.25; }
         #game-container.type-panoramic #options-container {
             flex: 0.75;
-            border-top: none; /* İsteğiniz: Mavi çizgiyi kaldır */
+            border-top: none; 
         }
         
-        /* TASARIM 2 (Normal Ses): Ses %40, Şıklar %60 */
         #game-container.type-audio-normal #question-area { flex: 0.4; }
         #game-container.type-audio-normal #options-container { flex: 0.6; }
         
-        /* GÜNCELLENDİ: TASARIM 3 (Cümle): Görsel %50, Şıklar %50 (Tam ikiye böl) */
         #game-container.type-image-sentence #question-area { flex: 1.4; min-height: 0; }
         #game-container.type-image-sentence #options-container { flex: 0.6; }
 
@@ -106,10 +124,9 @@
             border-radius: 15px;
         }
 
-     #play-sound-btn {
-            /* font-size: 5rem; SİLİNDİ */
-            display: grid; /* YENİ: İçeriği ortalamak için */
-            place-items: center; /* YENİ: İçeriği ortalamak için */
+         #play-sound-btn {
+            display: grid; 
+            place-items: center; 
             width: clamp(100px, 20vh, 150px); 
             height: clamp(100px, 20vh, 150px);
             border-radius: 50%;
@@ -119,15 +136,13 @@
             cursor: pointer;
         }
 
-
         /* --- YENİ ŞIK YERLEŞİM KURALLARI --- */
 
-        /* GÜNCELLENDİ: TASARIM 1 (Panoramik): 2+1 Izgara, boşluk arttı */
         #options-container.layout-panoramic {
             grid-template-rows: 1fr 1fr;    
             grid-template-columns: 1fr 1fr; 
-            padding: 20px 40px; /* Kenar boşluğu arttı */
-            gap: 20px; /* İsteğiniz: Aradaki boşluk arttı */
+            padding: 20px 40px; 
+            gap: 20px; 
         }
         #options-container.layout-panoramic .option-btn:nth-child(1) {
             grid-row: 1; grid-column: 1;
@@ -146,18 +161,15 @@
         }
 
         
-        /* TASARIM 2 (Normal Ses): 3 Sütun */
         #options-container.layout-audio-normal {
             grid-template-columns: 1fr 1fr 1fr; 
             grid-template-rows: 1fr;
         }
-
-        /* YENİ KURAL: Sadece normal ses şıklarının yüksekliği 100% olsun */
+ 
         #options-container.layout-audio-normal .option-btn {
             height: 100%;
         }
         
-        /* TASARIM 3 (Cümle): 3 Satır */
         #options-container.layout-image-sentence {
             grid-template-columns: 1fr;
             grid-template-rows: auto auto auto; 
@@ -166,11 +178,10 @@
             gap: 10px; 
         }
 
-        /* GÜNCELLENDİ: Çerçeve kalınlaştı */
         .option-btn {
             width: 100%;
             cursor: pointer;
-            border: 4px solid #ced4da; /* İsteğiniz: Çerçeve (3px->4px) */
+            border: 4px solid #ced4da; 
             border-radius: 12px;
             background-color: #f8f9fa;
             transition: all 0.2s ease;
@@ -191,49 +202,46 @@
             height: auto;
             object-fit: contain; 
             border-radius: 8px;
-            /* Resmin kendisine de ince bir çerçeve ekleyelim */
             border: 1px solid #eee;
         }
         
-        /* GÜNCELLENDİ: clamp() ile küçültüldü */
         #options-container.layout-panoramic .option-btn.image-option img {
              width: 100%; 
              object-fit: contain;
-             border: none; /* Panoramiklerde iç çerçeve olmasın */
-             /* İsteğiniz: Küçültüldü (Min 100px, Tercih edilen 40vh, Max 300px) */
+             border: none; 
              height: clamp(100px, 40vh, 300px);
         }
         
-        /* Ortadaki 3. resim için özel küçültme (2+1 düzende) */
         #options-container.layout-panoramic .option-btn:nth-child(3) img {
-             width: 100%; /* Düğmenin yarısı kaplasın (ortalı) */
+             width: 100%; 
              height: clamp(100px, 40vh, 300px);
         }
 
 
         .option-btn.text-option {
-            font-family: "Noto Naskh Arabic", sans-serif; /* YENİ: Naskh yazı tipi */
-            font-weight: 700; /* YENİ: Yazıyı kalın ve okunaklı yap */
+            font-family: "Noto Naskh Arabic", sans-serif; 
+            font-weight: 700; 
             font-size: clamp(3rem, 5vh, 7rem);
             text-align: center;
             direction: rtl; 
             line-height: 1.4;
-            height: auto; /* DÜZELTME: 'auto' olmalı ki kutu ortalansın */
+            height: auto; 
             padding: 10px;
         }
 
         #progress-indicator {
-            position: fixed;
+            position: absolute; 
             top: 0;
             left: 0;
             height: 8px;
             background-color: #007bff;
             width: 0%; 
             transition: width 0.3s ease;
+            z-index: 50; 
         }
 
         #feedback-overlay {
-            position: fixed;
+            position: absolute; 
             top: 0;
             left: 0;
             width: 100%;
@@ -249,12 +257,25 @@
         #feedback-overlay.correct { background-color: rgba(40, 167, 69, 0.85); }
         #feedback-overlay.wrong { background-color: rgba(220, 53, 69, 0.85); }
 
-        /* ========== MOBİL UYUMLULUK KODU BAŞLANGIÇ ========== */
-
+        
         /* ========== GÜNCELLENMİŞ MOBİL UYUMLULUK KODU ========== */
-
         @media (max-width: 768px) {
         
+            /* YENİ: Masaüstü kısıtlamalarını mobilde sıfırla */
+            /* Mobilde (genellikle 9:16) tam ekran olması için */
+            #start-screen, #game-container {
+                max-width: none;
+                max-height: none;
+                aspect-ratio: auto; /* Mobilde oranı zorlama, ekranı doldur */
+                border-radius: 0;
+                box-shadow: none;
+                background-color: transparent; 
+            }
+            
+            #progress-indicator, #feedback-overlay {
+                position: fixed;
+            }
+
             /* 1. Başlığı ve Ses Tuşunu Küçült */
             #instruction-text {
                 font-size: 1.4rem; 
@@ -267,8 +288,6 @@
                 height: clamp(70px, 12vh, 100px);
             }
             
-            /* GÜNCELLENDİ: 3 şıkkın sığması için dikey alanı değiştir */
-            /* Normal ses soruları (Tasarım 2) artık %25/%75 alan kullanacak */
             #game-container.type-audio-normal #question-area { flex: 0.25; }
             #game-container.type-audio-normal #options-container { flex: 0.75; }
 
@@ -287,10 +306,9 @@
                 height: 100%;
                 width: 100%;
                 object-fit: contain;
-                max-height: 100px; /* İsteğiniz: Çok küçük olsun (100px'ten 80px'e) */
+                max-height: 100px; 
             }
 
-            /* Panoramik (2+1) düzenin özel kurallarını mobilde sıfırla */
             #options-container.layout-panoramic .option-btn:nth-child(1),
             #options-container.layout-panoramic .option-btn:nth-child(2),
             #options-container.layout-panoramic .option-btn:nth-child(3) {
@@ -298,19 +316,16 @@
                 grid-column: auto;
             }
 
-            /* Panoramik 3. resmin genişlik kuralını sıfırla */
             #options-container.layout-panoramic .option-btn:nth-child(3) img {
                  width: 100%;
             }
             
-            /* GÜNCELLENDİ: "1,4,5 görsellerini" mobilde küçült */
-            /* Panoramik resimlerin yüksekliğini mobilde küçült */
             #options-container.layout-panoramic .option-btn.image-option img {
-                 height: clamp(100px, 20vh, 150px); /* 80px->100px, 15vh->20vh olarak değişti */
+                 height: clamp(100px, 20vh, 150px); 
             }
             #options-container.layout-panoramic .option-btn:nth-child(3) img {
                  width: 100%; 
-                 height: clamp(100px, 20vh, 150px); /* 80px->100px, 15vh->20vh olarak değişti */
+                 height: clamp(100px, 20vh, 150px); 
             }
             #options-container.layout-panoramic .option-btn:nth-child(3) img {
                  width: 100%; 
@@ -319,7 +334,6 @@
 
             /* 3. Cümle yazı tiplerini mobil için küçült */
             .option-btn.text-option {
-                /* Masaüstündeki dev (7rem) yerine daha küçüğü */
                 font-size: clamp(1.4rem, 4vh, 2rem); 
             }
         
