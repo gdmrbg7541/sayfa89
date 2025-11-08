@@ -4,9 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Arapça Etkileşimli Alıştırma</title>
+    <!-- YENİ: Google Font Eklendi -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;700&display=swap" rel="stylesheet">
+    <!-- YENİ: Bitiş -->
+
     <style>
         html, body {
             margin: 0;
@@ -98,7 +101,7 @@
 
         #question-image {
             max-width: 80%;
-            max-height: 70%; /* GÜNCELLENDİ: 80% -> 70% (Masaüstünde küçült) */
+            max-height: 80%;
             object-fit: contain; 
             border-radius: 15px;
         }
@@ -153,11 +156,6 @@
         #options-container.layout-audio-normal .option-btn {
             height: 100%;
         }
-
-        /* YENİ: Normal ses (Tasarım 2) resimlerini masaüstünde küçült */
-        #options-container.layout-audio-normal .option-btn.image-option img {
-            max-height: 35vh;
-        }
         
         /* TASARIM 3 (Cümle): 3 Satır */
         #options-container.layout-image-sentence {
@@ -203,15 +201,13 @@
              object-fit: contain;
              border: none; /* Panoramiklerde iç çerçeve olmasın */
              /* İsteğiniz: Küçültüldü (Min 100px, Tercih edilen 40vh, Max 300px) */
-             /* GÜNCELLENDİ: 40vh -> 35vh */
-             height: clamp(100px, 35vh, 300px);
+             height: clamp(100px, 40vh, 300px);
         }
         
         /* Ortadaki 3. resim için özel küçültme (2+1 düzende) */
         #options-container.layout-panoramic .option-btn:nth-child(3) img {
              width: 100%; /* Düğmenin yarısı kaplasın (ortalı) */
-             /* GÜNCELLENDİ: 40vh -> 35vh */
-             height: clamp(100px, 35vh, 300px);
+             height: clamp(100px, 40vh, 300px);
         }
 
 
@@ -507,7 +503,7 @@
 
                 if (question.type === 'audio_to_image') {
                     // YENİ: Yönerge metni ve Dikey Ortalama (Ses Simgesi)
-                    instructionEl.textContent = "اِسْتَمِعْ إِلى الصَّوْت وَاخْتَر الصّورَة‫.‬";
+                    instructionEl.textContent = "اِسْتَمِعْ إِلى الصَّوْت وَاخْتَر الصّورَة";
                     questionArea.style.justifyContent = 'center';
 
                     // Dikey bölünme sınıfını ayarla
@@ -539,7 +535,7 @@
 
                 } else if (question.type === 'image_to_text') {
                     // YENİ: Yönerge metni ve Üste Hizalama (Görsel)
-                    instructionEl.textContent = "اُنْظُرْ إِلى الصّورَة وَاخْتَر الجُمْلَة‫.‬";
+                    instructionEl.textContent = "اُنْظُرْ إِلى الصّورَة وَاخْتَر الجُمْلَة";
                     questionArea.style.justifyContent = 'flex-start'; // Görseli ve yönergeyi üste al
 
                     // Dikey bölünme sınıfını ayarla
