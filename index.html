@@ -27,15 +27,12 @@
 
         .hidden { display: none !important; }
 
-        /* GÜNCELLENDİ: 16:9 MASAÜSTÜ ORANI EKLENDİ */
         #start-screen {
             display: flex;
             justify-content: center;
             align-items: center;
             width: 100%;
             height: 100%;
-
-            /* YENİ: 16:9 KISITLAMA */
             max-width: 95vw;
             max-height: 95vh;
             aspect-ratio: 16 / 9;
@@ -53,23 +50,22 @@
             border-radius: 12px;
             background-color: #007bff;
             color: white;
+            font-family: "Noto Naskh Arabic", sans-serif;
         }
 
-        /* GÜNCELLENDİ: 16:9 MASAÜSTÜ ORANI EKLENDİ */
         #game-container {
             display: flex;
             flex-direction: column;
             width: 100%;
             height: 100%;
-            
-            /* YENİ: 16:9 KISITLAMA */
-            position: relative; /* Overlay'ler için gerekli */
+            position: relative;
             max-width: 95vw;
             max-height: 95vh;
             aspect-ratio: 16 / 9;
             border-radius: 16px;
             box-shadow: 0 6px 20px rgba(0,0,0,0.1);
             overflow: hidden; 
+            background-color: #fff;
         }
         
         #question-area {
@@ -98,13 +94,9 @@
             text-align: center;
         }
         
-        /* --- YENİ DİKEY BÖLÜNME KURALLARI --- */
-        
+        /* Layout Tipleri */
         #game-container.type-panoramic #question-area { flex: 0.25; }
-        #game-container.type-panoramic #options-container {
-            flex: 0.75;
-            border-top: none; 
-        }
+        #game-container.type-panoramic #options-container { flex: 0.75; border-top: none; }
         
         #game-container.type-audio-normal #question-area { flex: 0.4; }
         #game-container.type-audio-normal #options-container { flex: 0.6; }
@@ -132,41 +124,25 @@
             cursor: pointer;
         }
 
-
-        /* --- YENİ ŞIK YERLEŞİM KURALLARI --- */
-
+        /* Şık Yerleşimleri */
         #options-container.layout-panoramic {
             grid-template-rows: 1fr 1fr;    
             grid-template-columns: 1fr 1fr; 
             padding: 20px 40px; 
             gap: 20px; 
         }
-        #options-container.layout-panoramic .option-btn:nth-child(1) {
-            grid-row: 1; grid-column: 1;
-        }
-        #options-container.layout-panoramic .option-btn:nth-child(2) {
-            grid-row: 1; grid-column: 2;
-        }
-        #options-container.layout-panoramic .option-btn:nth-child(3) {
-            grid-row: 2; 
-            grid-column: 1 / span 2; 
-        }
-        /* Bu kural (3. resim için) artık düzgün çalışacak */
+        #options-container.layout-panoramic .option-btn:nth-child(1) { grid-row: 1; grid-column: 1; }
+        #options-container.layout-panoramic .option-btn:nth-child(2) { grid-row: 1; grid-column: 2; }
+        #options-container.layout-panoramic .option-btn:nth-child(3) { grid-row: 2; grid-column: 1 / span 2; }
         #options-container.layout-panoramic .option-btn:nth-child(3) img {
-             width: 50%; 
-             height: auto;
-             max-height: 100%;
+             width: 50%; height: auto; max-height: 100%;
         }
 
-        
         #options-container.layout-audio-normal {
             grid-template-columns: 1fr 1fr 1fr; 
             grid-template-rows: 1fr;
         }
- 
-        #options-container.layout-audio-normal .option-btn {
-            height: 100%;
-        }
+        #options-container.layout-audio-normal .option-btn { height: 100%; }
         
         #options-container.layout-image-sentence {
             grid-template-columns: 1fr;
@@ -189,6 +165,7 @@
             justify-content: center;
             align-items: center;
             overflow: hidden;
+            position: relative;
         }
         .option-btn:hover {
             transform: scale(1.03);
@@ -203,31 +180,25 @@
             border: 1px solid #eee;
         }
         
-        /* GÜNCELLENDİ: 1, 4, 5. görsellerin boyutu KÜÇÜLTÜLDÜ (40vh -> 25vh) */
         #options-container.layout-panoramic .option-btn.image-option img {
              width: 100%; 
              object-fit: contain;
              border: none; 
-             /* İsteğiniz: Küçültüldü (40vh -> 25vh, 300px -> 250px) */
              height: clamp(100px, 25vh, 250px);
         }
-        
-        /* GÜNCELLENDİ: ÇAKIŞAN KURAL (eski 201. satır) SİLİNDİ */
-        /* Bu kural 3. resmin (nth-child(3)) düzenini bozuyordu */
-
 
         .option-btn.text-option {
             font-family: "Noto Naskh Arabic", sans-serif; 
             font-weight: 700; 
-            font-size: clamp(3rem, 5vh, 7rem);
+            font-size: clamp(2.5rem, 4.5vh, 6rem);
             text-align: center;
             direction: rtl; 
-            line-height: 1.4;
+            line-height: 1.8; 
             height: auto; 
-            padding: 10px;
+            padding: 15px 10px; 
+            overflow: visible; 
         }
 
-        /* GÜNCELLENDİ: 16:9 için 'absolute' yapıldı */
         #progress-indicator {
             position: absolute;
             top: 0;
@@ -236,10 +207,9 @@
             background-color: #007bff;
             width: 0%; 
             transition: width 0.3s ease;
-            z-index: 50; /* Eklendi */
+            z-index: 50; 
         }
 
-        /* GÜNCELLENDİ: 16:9 için 'absolute' yapıldı */
         #feedback-overlay {
             position: absolute;
             top: 0;
@@ -257,11 +227,91 @@
         #feedback-overlay.correct { background-color: rgba(40, 167, 69, 0.85); }
         #feedback-overlay.wrong { background-color: rgba(220, 53, 69, 0.85); }
 
+        /* --- SONUÇ EKRANI STİLLERİ --- */
+        #results-screen {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+            background-color: #fff;
+            overflow-y: auto; 
+            align-items: center;
+        }
 
-        /* ========== GÜNCELLENMİŞ MOBİL UYUMLULUK KODU ========== */
-        @media (max-width: 768px) {
+        .results-title {
+            font-family: "Noto Naskh Arabic", sans-serif;
+            font-size: 3rem;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        /* DÜZELTME: Puan tablosu stili silindi veya gizlendi */
+
+        .results-list {
+            width: 90%;
+            max-width: 800px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .result-item {
+            display: flex;
+            align-items: center;
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+            direction: rtl;
+        }
+
+        .result-item.correct { border-right: 8px solid #28a745; }
+        .result-item.wrong { border-right: 8px solid #dc3545; }
+
+        .result-icon {
+            font-size: 1.5rem;
+            margin-left: 15px;
+            width: 40px;
+            text-align: center;
+        }
+
+        .result-content {
+            flex-grow: 1;
+            font-family: "Noto Naskh Arabic", sans-serif;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+        }
         
-            /* YENİ: Masaüstü 16:9 kısıtlamalarını mobilde sıfırla */
+        .result-thumbnail {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-left: 10px;
+            border: 1px solid #ccc;
+        }
+
+        .restart-btn {
+            font-family: "Noto Naskh Arabic", sans-serif;
+            font-size: 1.5rem;
+            padding: 10px 30px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+
+
+        /* Mobil Uyumluluk */
+        @media (max-width: 768px) {
             #start-screen, #game-container {
                 max-width: none;
                 max-height: none;
@@ -270,78 +320,26 @@
                 box-shadow: none;
                 background-color: transparent; 
             }
-            
-            /* YENİ: Overlay'leri mobilde tekrar 'fixed' yap */
-            #progress-indicator, #feedback-overlay {
-                position: fixed;
-            }
-
-            /* 1. Başlığı ve Ses Tuşunu Küçült */
-            #instruction-text {
-                font-size: 1.4rem; 
-                margin-bottom: 10px;
-            }
-
-            #play-sound-btn {
-                font-size: 3rem; 
-                width: clamp(70px, 12vh, 100px); 
-                height: clamp(70px, 12vh, 100px);
-            }
-            
+            #progress-indicator, #feedback-overlay { position: fixed; }
+            #instruction-text { font-size: 1.4rem; margin-bottom: 10px; }
+            #play-sound-btn { font-size: 3rem; width: clamp(70px, 12vh, 100px); height: clamp(70px, 12vh, 100px); }
             #game-container.type-audio-normal #question-area { flex: 0.25; }
             #game-container.type-audio-normal #options-container { flex: 0.75; }
-
-
-            /* 2. TÜM Görsel Şıklarını 3 Satır Yap */
-            #options-container.layout-panoramic,
-            #options-container.layout-audio-normal { 
-                grid-template-columns: 1fr; /* 1 sütun */
-                grid-template-rows: 1fr 1fr 1fr; /* 3 satır */
-                gap: 10px;
-                padding: 10px 20px; 
+            #options-container.layout-panoramic, #options-container.layout-audio-normal { 
+                grid-template-columns: 1fr; grid-template-rows: 1fr 1fr 1fr; gap: 10px; padding: 10px 20px; 
             }
-            
-            
-            #options-container.layout-audio-normal .option-btn img {
-                height: 100%;
-                width: 100%;
-                object-fit: contain;
-                max-height: 100px; 
-            }
-
-            /* Panoramik (2+1) düzenin özel kurallarını mobilde sıfırla */
+            #options-container.layout-audio-normal .option-btn img { max-height: 100px; }
             #options-container.layout-panoramic .option-btn:nth-child(1),
             #options-container.layout-panoramic .option-btn:nth-child(2),
-            #options-container.layout-panoramic .option-btn:nth-child(3) {
-                grid-row: auto;
-                grid-column: auto;
-            }
-
-            /* Panoramik 3. resmin genişlik kuralını sıfırla */
-            #options-container.layout-panoramic .option-btn:nth-child(3) img {
-                 width: 100%;
-            }
+            #options-container.layout-panoramic .option-btn:nth-child(3) { grid-row: auto; grid-column: auto; }
+            #options-container.layout-panoramic .option-btn:nth-child(3) img { width: 100%; height: clamp(100px, 20vh, 150px); }
+            #options-container.layout-panoramic .option-btn.image-option img { height: clamp(100px, 20vh, 150px); }
             
-            /* Panoramik resimlerin yüksekliğini mobilde ayarla (clamp) */
-            #options-container.layout-panoramic .option-btn.image-option img {
-                 height: clamp(100px, 20vh, 150px); 
-            }
-            #options-container.layout-panoramic .option-btn:nth-child(3) img {
-                 width: 100%; 
-                 height: clamp(100px, 20vh, 150px); 
-            }
-            #options-container.layout-panoramic .option-btn:nth-child(3) img {
-                 width: 100%; 
-                 height: clamp(100px, 20vh, 150px);
-            }
+            .option-btn.text-option { font-size: clamp(1.4rem, 4vh, 2rem); }
 
-            /* 3. Cümle yazı tiplerini mobil için küçült */
-            .option-btn.text-option {
-                font-size: clamp(1.4rem, 4vh, 2rem); 
-            }
-        
+            .results-title { font-size: 2rem; }
+            .result-item { font-size: 1rem; }
         }
-        /* ========== MOBİL UYUMLULUK KODU BİTİŞ ========== */
 
     </style>
     </head>
@@ -375,6 +373,7 @@
             let allQuestions = [];
             let currentQuestionIndex = 0;
             let isChecking = false; 
+            let userResults = []; 
 
             // --- VERİ HAZIRLAMA ---
             const allSentences = [
@@ -387,11 +386,11 @@
                 "أُفَضِّلُ كُرَة القَدَم.", // 6
                 "تُمارِس الرَّسْم في الحَديقَة.", // 7
                 "يَقْرَأُ الكِتاب في البَيْت.", // 8
-                "تُمارِسُ الرَّسْم في البَيْت.", // 9 (Ekstra)
-                "الرِّمايَة", // 10 (Ekstra)
-                "يَقْرَأُ الكِتاب في الحَديقَة.", // 11 (Ekstra)
-                "تُمارِس الرَّسْم في البَيْت.", // 12 (Ekstra)
-                "الاِسْتِماع إِلى الموسيقى" // 13 (Ekstra)
+                "تُمارِسُ الرَّسْم في البَيْت.", // 9
+                "الرِّمايَة", // 10
+                "يَقْرَأُ الكِتاب في الحَديقَة.", // 11
+                "تُمارِس الرَّسْم في البَيْت.", // 12
+                "الاِسْتِماع إِلى الموسيقى" // 13
             ];
 
             const allImages = [];
@@ -403,7 +402,7 @@
             const specialLandscapeImages = ['1.jpeg', '4.jpeg', '5.jpeg'];
             const specialIndices = [0, 3, 4]; 
 
-            // --- SES ÜRETİMİ (SİNÜS DALGASI) ---
+            // --- SES ---
             function createTone(frequency, type = 'sine', duration = 0.2) {
                 if (!audioContext) return;
                 const oscillator = audioContext.createOscillator();
@@ -431,17 +430,18 @@
                 audioContext = new (window.AudioContext || window.webkitAudioContext)();
                 startScreen.classList.add('hidden');
                 gameContainer.classList.remove('hidden');
+                
+                userResults = []; 
                 buildAndGroupQuestions();
                 currentQuestionIndex = 0;
                 loadQuestion(allQuestions[currentQuestionIndex]);
             }
 
-            // Soru Oluşturucu (Tasarım adları CSS ile eşleşiyor)
             function buildAndGroupQuestions() {
                 let audioQuestions = [];
                 let imageQuestions = [];
                 
-                // TASARIM 1 (Panoramik)
+                // Tip 1: Panoramik
                 audioQuestions.push({
                     type: 'audio_to_image',
                     sound: '1.mp3',
@@ -464,7 +464,7 @@
                     specificOptions: specialLandscapeImages
                 });
 
-                // TASARIM 2 (Normal Ses)
+                // Tip 2: Normal Ses
                 for (let i = 0; i < 9; i++) {
                     if (specialIndices.includes(i)) continue; 
                     audioQuestions.push({
@@ -475,7 +475,7 @@
                     });
                 }
 
-                // TASARIM 3 (Cümle)
+                // Tip 3: Cümle
                 for (let i = 0; i < 9; i++) {
                     if (specialIndices.includes(i)) continue; 
                     imageQuestions.push({
@@ -503,32 +503,27 @@
                 questionArea.innerHTML = '';
                 optionsContainer.innerHTML = '';
 
-                // Şıkların yerleşim düzenini ayarla
                 optionsContainer.className = 'options-container'; 
                 optionsContainer.classList.add(question.layout); 
 
                 const progressPercent = ((currentQuestionIndex + 1) / allQuestions.length) * 100;
                 progressIndicator.style.width = `${progressPercent}%`;
 
-                // YENİ: Yönerge elementini oluştur
                 const instructionEl = document.createElement('div');
                 instructionEl.id = 'instruction-text';
-                questionArea.appendChild(instructionEl); // Yönergeyi soru alanına ekle
+                questionArea.appendChild(instructionEl); 
 
                 let options = [];
                 let correctAnswer = question.correctAnswer;
 
                 if (question.type === 'audio_to_image') {
-                    // YENİ: Yönerge metni ve Dikey Ortalama (Ses Simgesi)
-                    // GÜNCELLENDİ: Nokta eklendi
                     instructionEl.textContent = "اِسْتَمِعْ إِلى الصَّوْت وَاخْتَر الصّورَة.";
                     questionArea.style.justifyContent = 'center';
 
-                    // Dikey bölünme sınıfını ayarla
                     if (question.layout === 'layout-panoramic') {
-                        gameContainer.className = 'type-panoramic'; // 25/75
+                        gameContainer.className = 'type-panoramic'; 
                     } else {
-                        gameContainer.className = 'type-audio-normal'; // 40/60
+                        gameContainer.className = 'type-audio-normal'; 
                     }
                     
                     const playButton = document.createElement('button');
@@ -536,7 +531,7 @@
                     playButton.innerHTML = '<svg viewBox="0 0 24 24" style="width: 55%; height: 55%;"><path fill="white" d="M8 5v14l11-7z"/></svg>';
                     const audio = new Audio(question.sound);
                     playButton.onclick = () => audio.play();
-                    questionArea.appendChild(playButton); // Düğmeyi yönergeden SONRA ekle
+                    questionArea.appendChild(playButton); 
                     
 
                     if (question.specificOptions) {
@@ -552,18 +547,15 @@
                     });
 
                 } else if (question.type === 'image_to_text') {
-                    // YENİ: Yönerge metni ve Üste Hizalama (Görsel)
-                    // GÜNCELLENDİ: Nokta eklendi
                     instructionEl.textContent = "اُنْظُرْ إِلى الصّورَة وَاخْتَر الجُمْلَة.";
-                    questionArea.style.justifyContent = 'flex-start'; // Görseli ve yönergeyi üste al
+                    questionArea.style.justifyContent = 'flex-start'; 
 
-                    // Dikey bölünme sınıfını ayarla
                     gameContainer.className = 'type-image-sentence'; 
                     
                     const img = document.createElement('img');
                     img.id = 'question-image';
                     img.src = question.image;
-                    questionArea.appendChild(img); // Resmi yönergeden SONRA ekle
+                    questionArea.appendChild(img); 
 
                     let distractors = getDistractors(allSentences, correctAnswer, 2, true);
                     options = shuffleArray([correctAnswer, ...distractors]);
@@ -600,7 +592,16 @@
             }
 
             function checkAnswer(selectedValue, correctAnswer) {
-                if (selectedValue === correctAnswer) {
+                const isCorrect = (selectedValue === correctAnswer);
+                const currentQ = allQuestions[currentQuestionIndex];
+                
+                userResults.push({
+                    index: currentQuestionIndex,
+                    isCorrect: isCorrect,
+                    questionData: currentQ
+                });
+
+                if (isCorrect) {
                     playCorrectSound();
                     showFeedback('correct');
                 } else {
@@ -627,16 +628,73 @@
 
             function showGameEnd() {
                 gameContainer.innerHTML = ''; 
-                const endMessage = document.createElement('h1');
-                endMessage.textContent = 'أَحْسَنْت اِنْتَهَيْت';
-                endMessage.style.color = '#333';
-                endMessage.style.fontSize = '3rem';
-                endMessage.style.textAlign = 'center';
-                gameContainer.appendChild(endMessage);
-                gameContainer.style.display = 'flex';
-                gameContainer.style.justifyContent = 'center';
-                gameContainer.style.alignItems = 'center';
-                progressIndicator.style.width = '0%';
+                gameContainer.className = ''; 
+
+                const resultScreen = document.createElement('div');
+                resultScreen.id = 'results-screen';
+
+                // Başlık
+                const title = document.createElement('h1');
+                title.className = 'results-title';
+                title.textContent = "مُلَخَّص الاِسْتِجابَة"; // "Cevap Özeti" anlamına gelir
+                resultScreen.appendChild(title);
+
+                // DÜZELTME: Puan Tablosu (Score Board) kaldırıldı.
+                
+                // Liste
+                const list = document.createElement('div');
+                list.className = 'results-list';
+
+                userResults.forEach(result => {
+                    const item = document.createElement('div');
+                    item.className = `result-item ${result.isCorrect ? 'correct' : 'wrong'}`;
+                    
+                    const icon = document.createElement('div');
+                    icon.className = 'result-icon';
+                    icon.textContent = result.isCorrect ? '✓' : '✗';
+                    icon.style.color = result.isCorrect ? '#28a745' : '#dc3545';
+                    item.appendChild(icon);
+
+                    const contentDiv = document.createElement('div');
+                    contentDiv.className = 'result-content';
+                    
+                    if (result.questionData.type === 'image_to_text') {
+                        const thumb = document.createElement('img');
+                        thumb.src = result.questionData.image;
+                        thumb.className = 'result-thumbnail';
+                        contentDiv.appendChild(thumb);
+                        
+                        const textSpan = document.createElement('span');
+                        textSpan.style.marginRight = '10px';
+                        textSpan.textContent = result.questionData.correctAnswer;
+                        contentDiv.appendChild(textSpan);
+
+                    } else {
+                        const thumb = document.createElement('img');
+                        thumb.src = result.questionData.correctAnswer;
+                        thumb.className = 'result-thumbnail';
+                        contentDiv.appendChild(thumb);
+                        
+                        const textSpan = document.createElement('span');
+                        textSpan.style.marginRight = '10px';
+                        textSpan.textContent = "(صَوْت)"; // (Ses)
+                        contentDiv.appendChild(textSpan);
+                    }
+
+                    item.appendChild(contentDiv);
+                    list.appendChild(item);
+                });
+
+                resultScreen.appendChild(list);
+
+                const restartBtn = document.createElement('button');
+                restartBtn.className = 'restart-btn';
+                restartBtn.textContent = "إِعادَة اللَّعْب"; // Oyunu Tekrarla
+                restartBtn.onclick = startGame;
+                resultScreen.appendChild(restartBtn);
+
+                gameContainer.appendChild(resultScreen);
+                progressIndicator.style.width = '100%';
             }
 
             // --- YARDIMCI FONKSİYONLAR ---
